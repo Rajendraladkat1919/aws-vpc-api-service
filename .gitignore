@@ -1,0 +1,68 @@
+# ----------------------------------------
+# Terraform
+# ----------------------------------------
+*.tfstate
+*.tfstate.backup
+.terraform/
+crash.log
+*.tfvars
+override.tf
+override.tf.json
+terraform.tfvars.json
+*.tfplan
+.plan
+
+# Ignore .terraform.lock.hcl if you want flexibility across versions
+# Uncomment if not using version pinning
+# .terraform.lock.hcl
+
+# ----------------------------------------
+# AWS credentials
+# ----------------------------------------
+*.pem
+*.key
+*.crt
+.aws/credentials
+.aws/config
+.aws-sam/
+.aws/
+
+# ----------------------------------------
+# Lambda - Python
+# ----------------------------------------
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+.env
+.env.*
+.venv/
+venv/
+build/
+dist/
+.cache/
+*.zip
+
+# SAM/Serverless Framework
+.serverless/
+.sagemaker/
+
+
+# ----------------------------------------
+# IDE / OS specific
+# ----------------------------------------
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.bak
+*.tmp
+*.log
+
+# ----------------------------------------
+# GitHub Actions secrets (precaution)
+# ----------------------------------------
+*.secrets.*
+.github/secrets.yml
