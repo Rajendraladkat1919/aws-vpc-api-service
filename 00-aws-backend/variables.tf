@@ -1,13 +1,13 @@
 variable "terraform_state_bucket_name" {
   description = "The name of the S3 bucket to store Terraform state"
   type        = string
-  default = "aws-service-api-terraform-state"
+  default     = "aws-service-api-terraform-state"
 }
 
 variable "dynamodb_state_lock_table_name" {
   description = "The name of the DynamoDB table to use for Terraform state locking"
   type        = string
-  default = "terraform_lock_table_name"
+  default     = "terraform_lock_table_name"
 }
 
 variable "environment" {

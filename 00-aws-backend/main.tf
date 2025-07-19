@@ -35,8 +35,8 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "terraform_remote_
 }
 
 resource "aws_dynamodb_table" "remote_tf_lock" {
-  name         = var.dynamodb_state_lock_table_name
-  tags         = {
+  name = var.dynamodb_state_lock_table_name
+  tags = {
     Name        = "Terraform Lock Table"
     Environment = var.environment
   }
