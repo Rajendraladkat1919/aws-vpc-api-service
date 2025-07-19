@@ -74,43 +74,6 @@ resource "aws_internet_gateway" "main" {
   })
 }
 
-# VPC Endpoint: DynamoDB (Gateway type)
-resource "aws_vpc_endpoint" "dynamodb" {
-  vpc_id            = aws_vpc.main.id
-  service_name      = "com.amazonaws.${var.aws_region}.dynamodb"
-  vpc_endpoint_type = "Gateway"
-  route_table_ids   = [for rt in aws_route_table.private : rt.id]
-
-  tags = merge(local.common_tags, {
-    Name = "DynamoDBVPCEndpoint"
-  })
-}
-
-# VPC Endpoints: Lambda and API Gateway (Interface type)
-resource "aws_vpc_endpoint" "lambda" {
-  vpc_id             = aws_vpc.main.id
-  service_name       = "com.amazonaws.${var.aws_region}.lambda"
-  vpc_endpoint_type  = "Interface"
-  subnet_ids         = [for s in aws_subnet.private : s.id]
-  security_group_ids = [] # Add security group IDs as needed
-
-  tags = merge(local.common_tags, {
-    Name = "LambdaVPCEndpoint"
-  })
-}
-
-resource "aws_vpc_endpoint" "apigateway" {
-  vpc_id             = aws_vpc.main.id
-  service_name       = "com.amazonaws.${var.aws_region}.execute-api"
-  vpc_endpoint_type  = "Interface"
-  subnet_ids         = [for s in aws_subnet.private : s.id]
-  security_group_ids = [] # Add security group IDs as needed
-
-  tags = merge(local.common_tags, {
-    Name = "APIGatewayVPCEndpoint"
-  })
-}
-
 provider "aws" {
   region  = var.aws_region
   profile = var.aws_profile

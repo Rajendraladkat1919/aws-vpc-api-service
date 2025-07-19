@@ -50,17 +50,3 @@ resource "aws_iam_role_policy_attachment" "lambda_policy_attach" {
   role       = aws_iam_role.lambda_exec_role.name
   policy_arn = aws_iam_policy.lambda_exec_policy.arn
 }
-
-resource "aws_iam_user" "api_user" {
-  name = "vpc-api-user"
-  tags = {
-    Name        = "VPCAPIUser"
-    Environment = var.environment
-    Project     = var.project_name
-  }
-}
-
-resource "aws_iam_user_policy_attachment" "api_user_policy" {
-  user       = aws_iam_user.api_user.name
-  policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess" // Restrict as needed
-}
