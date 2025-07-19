@@ -1,3 +1,7 @@
+provider "aws" {
+  region  = var.aws_region
+  profile = var.aws_profile
+}
 resource "aws_s3_bucket" "terraform_remote_state" {
   bucket        = var.terraform_state_bucket_name
   force_destroy = false

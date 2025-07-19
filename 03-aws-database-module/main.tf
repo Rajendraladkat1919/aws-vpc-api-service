@@ -1,3 +1,8 @@
+provider "aws" {
+  region  = var.aws_region
+  profile = var.aws_profile
+}
+
 resource "aws_dynamodb_table" "vpc_metadata" {
   name         = var.table_name
   hash_key     = "id"
@@ -11,4 +16,5 @@ resource "aws_dynamodb_table" "vpc_metadata" {
     "Name" = "VPCMetadataTable"
   }
 }
+
 

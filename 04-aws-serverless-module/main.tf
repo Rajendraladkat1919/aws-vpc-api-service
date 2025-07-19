@@ -1,16 +1,23 @@
+provider "aws" {
+  region  = var.aws_region
+  profile = var.aws_profile
+}
+
 resource "aws_lambda_function" "vpc_metadata" {
   filename         = "lambda/vpc_metadata_lambda.zip"
   function_name    = "VpcMetadataLambda"
   role             = var.lambda_role_arn
   handler          = "vpc_metadata_lambda.lambda_handler"
-  runtime          = "python3.8"
+  runtime          = "python3.11"  # Updated from python3.8
   memory_size      = 256
   timeout          = 30
+
   environment {
     variables = {
       DYNAMODB_TABLE_NAME = var.dynamodb_table_name
     }
   }
+
   tags = {
     Name        = "VpcMetadataLambda"
     Environment = var.environment
@@ -21,9 +28,11 @@ resource "aws_lambda_function" "vpc_metadata" {
 resource "aws_api_gateway_rest_api" "vpc_api" {
   name        = "VPC API"
   description = "API to create and show VPC metadata"
+
   endpoint_configuration {
     types = ["REGIONAL"]
   }
+
   tags = {
     Name        = "VPCAPI"
     Environment = var.environment
@@ -42,7 +51,7 @@ resource "aws_api_gateway_method" "vpc_put" {
   resource_id   = aws_api_gateway_resource.vpc.id
   http_method   = "PUT"
   authorization = "COGNITO_USER_POOLS"
-  authorizer_id = var.cognito_authorizer_arn
+  authorizer_id = aws_api_gateway_authorizer.main.id
 }
 
 resource "aws_api_gateway_method" "vpc_get" {
@@ -50,7 +59,7 @@ resource "aws_api_gateway_method" "vpc_get" {
   resource_id   = aws_api_gateway_resource.vpc.id
   http_method   = "GET"
   authorization = "COGNITO_USER_POOLS"
-  authorizer_id = var.cognito_authorizer_arn
+  authorizer_id = aws_api_gateway_authorizer.main.id
 }
 
 resource "aws_api_gateway_integration" "vpc_put_integration" {
@@ -81,6 +90,7 @@ resource "aws_lambda_permission" "allow_apigw_vpc_metadata" {
 
 resource "aws_cognito_user_pool" "main" {
   name = "vpc-api-user-pool"
+
   tags = {
     Name        = "VPCAPIUserPool"
     Environment = var.environment
@@ -89,8 +99,8 @@ resource "aws_cognito_user_pool" "main" {
 }
 
 resource "aws_cognito_user_pool_client" "main" {
-  name         = "vpc-api-client"
-  user_pool_id = aws_cognito_user_pool.main.id
+  name           = "vpc-api-client"
+  user_pool_id   = aws_cognito_user_pool.main.id
   generate_secret = false
 }
 
@@ -100,11 +110,17 @@ resource "aws_cognito_user_pool_domain" "main" {
 }
 
 resource "aws_api_gateway_authorizer" "main" {
-  name                    = "vpc-api-cognito-authorizer"
-  rest_api_id             = aws_api_gateway_rest_api.vpc_api.id
-  type                    = "COGNITO_USER_POOLS"
-  provider_arns           = [aws_cognito_user_pool.main.arn]
-  identity_source         = "method.request.header.Authorization"
+  name            = "vpc-api-cognito-authorizer"
+  rest_api_id     = aws_api_gateway_rest_api.vpc_api.id
+  type            = "COGNITO_USER_POOLS"
+  provider_arns   = [aws_cognito_user_pool.main.arn]
+  identity_source = "method.request.header.Authorization"
 }
 
-
+resource "aws_api_gateway_deployment" "vpc_api_deployment" {
+  depends_on = [
+    aws_api_gateway_integration.vpc_put_integration,
+    aws_api_gateway_integration.vpc_get_integration
+  ]
+  rest_api_id = aws_api_gateway_rest_api.vpc_api.id
+}
