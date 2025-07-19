@@ -17,18 +17,3 @@ output "internet_gateway_id" {
   description = "The Internet Gateway ID"
   value       = aws_internet_gateway.main.id
 }
-
-output "dynamodb_vpc_endpoint_id" {
-  description = "The VPC Endpoint ID for DynamoDB"
-  value       = aws_vpc_endpoint.dynamodb.id
-}
-
-output "lambda_vpc_endpoint_id" {
-  description = "The VPC Endpoint ID for Lambda"
-  value       = aws_vpc_endpoint.lambda.id
-}
-
-output "apigateway_vpc_endpoint_id" {
-  description = "The VPC Endpoint ID for API Gateway"
-  value       = aws_vpc_endpoint.apigateway.id
-}
