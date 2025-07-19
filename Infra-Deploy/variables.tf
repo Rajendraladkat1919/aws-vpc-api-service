@@ -1,20 +1,33 @@
-variable "table_name" {
-  description = "The name of the DynamoDB table"
-  default     = "VPCMetadata"
-}
-
 variable "aws_region" {
   description = "AWS region to deploy resources in"
+  type        = string
   default     = "eu-central-1"
 }
 
 variable "aws_profile" {
   description = "AWS CLI profile to use for authentication"
+  type        = string
   default     = "default"
+}
+
+variable "project_name" {
+  description = "Name of the project"
+  type        = string
+}
+
+variable "environment" {
+  description = "Deployment environment (e.g., dev, staging, prod)"
+  type        = string
+}
+
+variable "owner" {
+  description = "Owner of the resources"
+  type        = string
 }
 
 variable "vpc_cidr" {
   description = "CIDR block for the VPC"
+  type        = string
   default     = "10.0.0.0/16"
 }
 
@@ -42,17 +55,23 @@ variable "availability_zones" {
   default     = ["eu-central-1a", "eu-central-1b"]
 }
 
-variable "environment" {
-  description = "Deployment environment (e.g., dev, staging, prod)"
-  default     = "dev"
+variable "dynamodb_table_name" {
+  description = "Name of the DynamoDB table for storing VPC and subnet data"
+  type        = string
+  default     = "vpc_metadata"
 }
 
-variable "project_name" {
-  description = "Name of the project"
-  default     = "aws-vpc-api-service"
+variable "cognito_authorizer_arn" {
+  description = "ARN of the Cognito authorizer for API Gateway"
+  type        = string
 }
 
-variable "owner" {
-  description = "Owner of the resources"
-  default     = "rajendraladkat"
+variable "lambda_arn" {
+  description = "ARN of the Lambda function to be invoked"
+  type        = string
+}
+
+variable "lambda_role_arn" {
+  description = "IAM role ARN for Lambda"
+  type        = string
 }

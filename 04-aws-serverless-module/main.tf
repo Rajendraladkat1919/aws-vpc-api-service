@@ -4,13 +4,13 @@ provider "aws" {
 }
 
 resource "aws_lambda_function" "vpc_metadata" {
-  filename         = "lambda/vpc_metadata_lambda.zip"
-  function_name    = "VpcMetadataLambda"
-  role             = var.lambda_role_arn
-  handler          = "vpc_metadata_lambda.lambda_handler"
-  runtime          = "python3.11"  # Updated from python3.8
-  memory_size      = 256
-  timeout          = 30
+  filename      = "lambda/vpc_metadata_lambda.zip"
+  function_name = "VpcMetadataLambda"
+  role          = var.lambda_role_arn
+  handler       = "vpc_metadata_lambda.lambda_handler"
+  runtime       = "python3.11" # Updated from python3.8
+  memory_size   = 256
+  timeout       = 30
 
   environment {
     variables = {
@@ -99,14 +99,29 @@ resource "aws_cognito_user_pool" "main" {
 }
 
 resource "aws_cognito_user_pool_client" "main" {
-  name           = "vpc-api-client"
-  user_pool_id   = aws_cognito_user_pool.main.id
+  name            = "vpc-api-client"
+  user_pool_id    = aws_cognito_user_pool.main.id
   generate_secret = false
 }
 
 resource "aws_cognito_user_pool_domain" "main" {
   domain       = "vpc-api-domain-${var.environment}"
   user_pool_id = aws_cognito_user_pool.main.id
+}
+
+resource "random_password" "cognito_user_password" {
+  length  = 16
+  special = true
+}
+
+resource "aws_cognito_user" "test_user" {
+  user_pool_id       = aws_cognito_user_pool.main.id
+  username           = var.cognito_user_name
+  temporary_password = random_password.cognito_user_password.result
+  attributes = {
+    email = "raladevops1@gmail.com"
+  }
+  force_alias_creation = false
 }
 
 resource "aws_api_gateway_authorizer" "main" {

@@ -7,12 +7,13 @@ variable "aws_region" {
 variable "aws_profile" {
   description = "AWS CLI profile to use for authentication"
   type        = string
+  default     = "default"
 }
 
 variable "project_name" {
   description = "Name of the project"
   type        = string
-  default = "demo-project"
+  default     = "demo-project"
 }
 
 variable "environment" {
@@ -23,6 +24,6 @@ variable "environment" {
 variable "owner" {
   description = "Owner of the resources"
   type        = string
-  default = "rajendra.ladkat"
-  
+  default     = "rajendra.ladkat"
+
 }
