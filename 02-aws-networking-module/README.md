@@ -1,10 +1,28 @@
 # aws-networking-module
 
-This module provisions all networking resources for the VPC API service:
-- VPC with configurable CIDR block
-- Public and private subnets across multiple availability zones
-- Internet Gateway for public connectivity
-- Private VPC endpoints for Lambda, DynamoDB, and API Gateway
-- Enhanced tagging for environment, project, and owner
+This module provisions the networking infrastructure for the AWS VPC API service.
 
-Outputs include VPC ID, subnet IDs, internet gateway ID, and VPC endpoint IDs for integration with other modules.
+## Features
+- VPC with public and private subnets
+- Internet Gateway, NAT Gateway, and VPC endpoints
+- Subnet and VPC tagging for easy identification
+- Outputs for VPC ID, subnet IDs, and endpoint IDs
+
+## Usage
+1. Configure variables in `variables.tf` or via CLI/TFVARS.
+2. Run:
+   ```sh
+   terraform init
+   terraform plan
+   terraform apply
+   ```
+3. Networking resources will be created for use by other modules.
+
+## Security
+- Subnets and endpoints are provisioned with security groups
+- Follows AWS best practices for networking
+
+## Outputs
+- VPC ID
+- Subnet IDs
+- VPC endpoint IDs
