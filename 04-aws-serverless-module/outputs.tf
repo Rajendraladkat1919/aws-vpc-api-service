@@ -15,7 +15,12 @@ output "api_gateway_url" {
 
 output "api_gateway_invoke_url" {
   description = "Invoke URL for the API Gateway"
-  value       = "https://${aws_api_gateway_rest_api.vpc_api.id}.execute-api.${var.aws_region}.amazonaws.com/${var.environment}"
+  value       = "https://${aws_api_gateway_rest_api.vpc_api.id}.execute-api.${var.aws_region}.amazonaws.com/${aws_api_gateway_stage.vpc_api_stage.stage_name}"
+}
+
+output "api_gateway_vpc_endpoint" {
+  description = "Complete VPC API endpoint URL"
+  value       = "https://${aws_api_gateway_rest_api.vpc_api.id}.execute-api.${var.aws_region}.amazonaws.com/${aws_api_gateway_stage.vpc_api_stage.stage_name}/vpc"
 }
 
 output "cognito_user_pool_id" {
