@@ -132,10 +132,26 @@ resource "aws_api_gateway_authorizer" "main" {
   identity_source = "method.request.header.Authorization"
 }
 
+resource "aws_api_gateway_stage" "vpc_api_stage" {
+  rest_api_id = aws_api_gateway_rest_api.vpc_api.id
+  stage_name  = var.environment
+
+  deployment_id = aws_api_gateway_deployment.vpc_api_deployment.id
+
+  tags = {
+    Name        = "VPCAPIStage"
+    Environment = var.environment
+    Project     = var.project_name
+  }
+}
 resource "aws_api_gateway_deployment" "vpc_api_deployment" {
   depends_on = [
     aws_api_gateway_integration.vpc_put_integration,
     aws_api_gateway_integration.vpc_get_integration
   ]
   rest_api_id = aws_api_gateway_rest_api.vpc_api.id
+  lifecycle {
+    create_before_destroy = true
+  }
+  stage_name  = var.environment 
 }
